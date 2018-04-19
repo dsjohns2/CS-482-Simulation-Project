@@ -4,4 +4,4 @@ class system:
 		self.eventlist = []
 		
 		# System Variables
-		cur_time = 0
+		self.cur_time = 0
