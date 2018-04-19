@@ -1,14 +1,12 @@
 import event
-import eventlist
+import system
 import event_functions
 
-# Variables
-
-# This schedules the initialization event.
-ev = eventlist.eventlist()
+# Schedule the initialization event.
+sys = system.system()
 initialization_event = event.event(0, event_functions.node_init)
-ev.eventlist.append(initialization_event)
+sys.eventlist.append(initialization_event)
 
 # This is the simulation loop.
-for event in ev.eventlist:
-	event.execute(ev.eventlist)
+for event in sys.eventlist:
+	event.execute(sys)

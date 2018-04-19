@@ -3,5 +3,5 @@ class event:
 		self.time = time
 		self.func = func
 
-	def execute(self, ev_list):
-		self.func(ev_list)
+	def execute(self, sys):
+		self.func(sys)
