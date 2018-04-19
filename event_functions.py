@@ -10,7 +10,7 @@ def node_init(sys):
 	# State changes
 
 	# Schedule events
-	new_event_time = sys.cur_time + 1
+	new_event_time = sys.cur_time
 	new_event = event.event("Rider Request", new_event_time, node_rider_request)
 	sys.eventlist.append(new_event)
 	
@@ -22,11 +22,11 @@ def node_rider_request(sys):
 	# State changes
 
 	# Schedule events
-	new_event_time = sys.cur_time + 1
+	new_event_time = sys.cur_time + 10
 	new_event = event.event("Rider Request", new_event_time, node_rider_request)
 	sys.eventlist.append(new_event)
 
-	new_event_time = sys.cur_time + 1
+	new_event_time = sys.cur_time + 15
 	new_event = event.event("Driver Response", new_event_time, node_driver_response)
 	sys.eventlist.append(new_event)
 
@@ -38,7 +38,7 @@ def node_driver_response(sys):
 	# State changes
 
 	# Schedule events
-	new_event_time = sys.cur_time + 1
+	new_event_time = sys.cur_time + 20
 	new_event = event.event("End of Drive", new_event_time, node_end_of_drive)
 	sys.eventlist.append(new_event)
 
@@ -50,6 +50,6 @@ def node_end_of_drive(sys):
 	# State changes
 
 	# Schedule events
-	new_event_time = sys.cur_time + 1
+	new_event_time = sys.cur_time
 	new_event = event.event("Driver Response", new_event_time, node_driver_response)
 	sys.eventlist.append(new_event)
