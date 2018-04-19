@@ -1,5 +1,6 @@
 import event
 import system
+import heapq
 
 # These are the nodes in the event graph.
 def node_init(sys):
@@ -12,7 +13,8 @@ def node_init(sys):
 	# Schedule events
 	new_event_time = sys.cur_time
 	new_event = event.event("Rider Request", new_event_time, node_rider_request)
-	sys.eventlist.append(new_event)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
 	
 def node_rider_request(sys):
 	print("This is the rider request event.")
@@ -24,11 +26,13 @@ def node_rider_request(sys):
 	# Schedule events
 	new_event_time = sys.cur_time + 10
 	new_event = event.event("Rider Request", new_event_time, node_rider_request)
-	sys.eventlist.append(new_event)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
 
 	new_event_time = sys.cur_time + 15
 	new_event = event.event("Driver Response", new_event_time, node_driver_response)
-	sys.eventlist.append(new_event)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
 
 def node_driver_response(sys):
 	print("This is the driver response event.")
@@ -40,7 +44,8 @@ def node_driver_response(sys):
 	# Schedule events
 	new_event_time = sys.cur_time + 20
 	new_event = event.event("End of Drive", new_event_time, node_end_of_drive)
-	sys.eventlist.append(new_event)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
 
 def node_end_of_drive(sys):
 	print("This is the end of drive event.")
@@ -52,4 +57,5 @@ def node_end_of_drive(sys):
 	# Schedule events
 	new_event_time = sys.cur_time
 	new_event = event.event("Driver Response", new_event_time, node_driver_response)
-	sys.eventlist.append(new_event)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
