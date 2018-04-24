@@ -7,11 +7,11 @@ import heapq
 
 
 def gen_location():
-    return random.randint(0, 100)
+    return (random.randint(0, 100), random.randint(0, 100))
 
 
 def distance(a, b):
-    return abs(a-b)
+    return abs(a[0]-b[0]) + abs(a[1] - b[1])
 
 
 def have_free_driver(sys):
@@ -50,7 +50,7 @@ def node_rider_request(sys, args):
     rider_id = len(sys.rider_start_locations)
     rider_location = gen_location()
     sys.rider_start_locations.append(rider_location)
-    sys.rider_end_locations.append(-1)
+    sys.rider_end_locations.append(gen_location())
     sys.rider_start_times.append(sys.cur_time)
     sys.rider_end_times.append(-1)
 
