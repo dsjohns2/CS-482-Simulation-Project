@@ -97,6 +97,8 @@ def node_available_driver(sys, args):
             priority=4)
         eventlist_tuple = (new_event_time, new_event)
         heapq.heappush(sys.eventlist, eventlist_tuple)
+    else:
+        sys.rider_queue.append(rider_id)
 
 
 def node_driver_response(sys, args):
@@ -134,8 +136,11 @@ def node_end_of_drive(sys, args):
 
     # Schedule events
     new_event_time = sys.cur_time
-    new_event = event.event("Available Driver", new_event_time, node_available_driver, args={
-                            'rider_id': rider_id, 'rider_location': rider_location})
-    eventlist_tuple = (new_event_time, new_event)
-    heapq.heappush(sys.eventlist, eventlist_tuple)
+    if len(sys.rider_queue) > 0:
+        rider_id = sys.rider_queue.pop(0)
+        rider_location = sys.rider_start_locations[rider_id]
+        new_event = event.event("Available Driver", new_event_time, node_available_driver, args={
+                                'rider_id': rider_id, 'rider_location': rider_location})
+        eventlist_tuple = (new_event_time, new_event)
+        heapq.heappush(sys.eventlist, eventlist_tuple)
     print("")

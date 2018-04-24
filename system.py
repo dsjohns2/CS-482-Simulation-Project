@@ -5,6 +5,7 @@ class system:
 
         # System Variables
         self.cur_time = 0
+        self.rider_queue = []
         self.rider_start_locations = []
         self.rider_end_locations = []
         self.rider_start_times = []
