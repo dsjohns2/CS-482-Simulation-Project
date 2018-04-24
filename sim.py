@@ -11,7 +11,7 @@ sys.eventlist.append(initialization_event)
 
 # This is the simulation loop.
 event_num = 0
-while(event_num < 15):
+while(event_num < 10000):
     event_num += 1
     val, event = heapq.heappop(sys.eventlist)
     sys.cur_time = event.time
