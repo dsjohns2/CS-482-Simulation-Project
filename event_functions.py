@@ -1,13 +1,26 @@
 import event
 import random
-import system
 import heapq
+import numpy as np
 
 # Helper Functions
 
+san_fran_distance = 60 * 60
+
 
 def gen_location():
-    return (random.randint(0, 100), random.randint(0, 100))
+    return (random.randint(0, san_fran_distance),
+            random.randint(0, san_fran_distance))
+
+
+def gen_end_rider(sys, start_loc):
+    STD = 810 * sys.speed
+    MEAN = 1663 * sys.speed
+    # FIXME: don't cast dist to int (change everything else to floats instead)
+    dist = max(1, int(np.random.randn() * STD + MEAN))
+    delta_x = random.randint(-dist, dist)
+    return (start_loc[0] + delta_x, start_loc[1] + (dist - delta_x) *
+            -1 if random.randint(0, 1) == 0 else 1)
 
 
 def distance(a, b):
@@ -19,6 +32,18 @@ def have_free_driver(sys):
         if driver:
             return True
     return False
+
+
+def loc_rnd(sys):
+    STD = 810 * sys.speed
+    MEAN = 1663 * sys.speed
+    return np.random.randn() * STD + MEAN
+
+
+def inter_rnd():
+    STD = 10
+    MEAN = 60
+    return np.random.randn() * STD + MEAN
 
 
 # These are the nodes in the event graph.
@@ -50,12 +75,13 @@ def node_rider_request(sys, args):
     rider_id = len(sys.rider_start_locations)
     rider_location = gen_location()
     sys.rider_start_locations.append(rider_location)
-    sys.rider_end_locations.append(gen_location())
+    sys.rider_end_locations.append(gen_end_rider(sys, rider_location))
     sys.rider_start_times.append(sys.cur_time)
+    sys.rider_pickup_times.append(-1)
     sys.rider_end_times.append(-1)
 
     # Schedule events
-    new_event_time = sys.cur_time + 10
+    new_event_time = sys.cur_time + inter_rnd()
     new_event = event.event(
         "Rider Request", new_event_time, node_rider_request)
     eventlist_tuple = (new_event_time, new_event)
@@ -89,7 +115,7 @@ def node_available_driver(sys, args):
               .format(min_driver_id, rider_id))
 
         # Schedule events
-        new_event_time = sys.cur_time + 15
+        new_event_time = sys.cur_time + min_distance/sys.speed
         # FIXME: Not sure if this is supposed to be higher or lower priority
         new_event = event.event(
             "Driver Response", new_event_time, node_driver_response,
@@ -110,9 +136,13 @@ def node_driver_response(sys, args):
     driver_id = args['driver_id']
     rider_id = args['rider_id']
     sys.driver_current_locations[driver_id] = sys.rider_start_locations[rider_id]
+    sys.rider_pickup_times[rider_id] = sys.cur_time
+
+    drive_dist = distance(
+        sys.rider_start_locations[rider_id], sys.rider_end_locations[rider_id])
 
     # Schedule events
-    new_event_time = sys.cur_time + 20
+    new_event_time = sys.cur_time + drive_dist/sys.speed
     new_event = event.event("End of Drive", new_event_time,
                             node_end_of_drive, args=args)
     eventlist_tuple = (new_event_time, new_event)

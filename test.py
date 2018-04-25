@@ -18,12 +18,12 @@ with open("Travel_Times.csv") as f:
     print("Min: {}".format(shortest))
     longest = max(travel_times)
     print("Max: {}".format(longest))
-    width = (longest-shortest)//20
+    width = ((longest-shortest)//20)
     x = list(range(shortest, longest, width))
     x_freq = [0 for i in x]
     for time in travel_times:
         for index, bucket in enumerate(x):
-            if time < bucket + 20:
+            if time < bucket + width:
                 x_freq[index] += 1
                 break
 

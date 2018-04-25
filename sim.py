@@ -16,3 +16,7 @@ while(event_num < 10000):
     val, event = heapq.heappop(sys.eventlist)
     sys.cur_time = event.time
     event.execute(sys)
+
+print("wait times")
+for start, end in zip(sys.rider_start_times, sys.rider_pickup_times):
+    print(end - start)
