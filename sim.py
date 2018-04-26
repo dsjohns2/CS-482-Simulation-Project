@@ -12,6 +12,7 @@ ic_speed = 20
 num_times_run_sim = 1000
 num_events_per_sim = 10000
 wait_times = []
+ride_times = []
 
 for i in range(0, num_times_run_sim):
 	#FIXME why does this need to be imported here?
@@ -44,6 +45,12 @@ for i in range(0, num_times_run_sim):
 			cur_sim_wait_times.append(end - start)
 	wait_times.append(cur_sim_wait_times)
 
+	cur_sim_ride_times = []
+	for start, end in zip(sys.rider_pickup_times, sys.rider_end_times):
+		if(end != -1):
+			cur_sim_ride_times.append(end - start)
+	ride_times.append(cur_sim_ride_times)
+
 # Write wait times to file
 smallest_sim_len = len(wait_times[0])
 for i in range(0, len(wait_times)):
@@ -52,12 +59,31 @@ for i in range(0, len(wait_times)):
 
 import sys
 orig_stdout = sys.stdout
-f = open('output_drivers'+str(ic_num_drivers)+'.csv', 'w')
+f = open('wait_time_output_drivers'+str(ic_num_drivers)+'.csv', 'w')
 sys.stdout = f
 
 for i in range(0, smallest_sim_len):
 	for j in range(0, len(wait_times)):
 		print(wait_times[j][i], end=',')
+	print("")
+
+sys.stdout = orig_stdout
+f.close()
+
+# Write ride times to file
+smallest_sim_len = len(ride_times[0])
+for i in range(0, len(ride_times)):
+	if(len(ride_times[i]) < smallest_sim_len):
+		smallest_sim_len = len(ride_times[i])
+
+import sys
+orig_stdout = sys.stdout
+f = open('ride_time_output_drivers'+str(ic_num_drivers)+'.csv', 'w')
+sys.stdout = f
+
+for i in range(0, smallest_sim_len):
+	for j in range(0, len(ride_times)):
+		print(ride_times[j][i], end=',')
 	print("")
 
 sys.stdout = orig_stdout
