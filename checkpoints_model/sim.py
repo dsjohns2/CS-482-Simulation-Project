@@ -6,13 +6,14 @@ import numpy as np
 import random
 import event
 
-ic_num_drivers_list = [1, 50, 100, 200, 300]
+ic_num_drivers_list = [1, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 ic_speed = 20
 
-num_times_run_sim = 1000
+num_times_run_sim = 10
 num_events_per_sim = 10000
 
 for ic_num_drivers in ic_num_drivers_list:
+	print("Running IC Drivers = " + str(ic_num_drivers))
 	wait_times = []
 	ride_times = []
 	for i in range(0, num_times_run_sim):
@@ -32,6 +33,11 @@ for ic_num_drivers in ic_num_drivers_list:
 		# This is the simulation loop
 		event_num = 0
 		while(event_num < num_events_per_sim):
+			"""
+			for v, ev in sys.eventlist:
+				print(ev.name, end=" ")
+			print("")
+			"""
 			event_num += 1
 			val, cur_event = heapq.heappop(sys.eventlist)
 			sys.cur_time = cur_event.time
@@ -58,7 +64,7 @@ for ic_num_drivers in ic_num_drivers_list:
 
 	import sys
 	orig_stdout = sys.stdout
-	f = open('basemodel_waittime_drivers'+str(ic_num_drivers)+'.csv', 'w')
+	f = open('checkpointsmodel_waittime_drivers'+str(ic_num_drivers)+'.csv', 'w')
 	sys.stdout = f
 
 	for i in range(0, smallest_sim_len):
@@ -77,7 +83,7 @@ for ic_num_drivers in ic_num_drivers_list:
 
 	import sys
 	orig_stdout = sys.stdout
-	f = open('basemodel_ridetime_drivers'+str(ic_num_drivers)+'.csv', 'w')
+	f = open('checkpointsmodel_ridetime_drivers'+str(ic_num_drivers)+'.csv', 'w')
 	sys.stdout = f
 
 	for i in range(0, smallest_sim_len):
