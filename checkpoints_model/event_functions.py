@@ -75,13 +75,7 @@ def node_rider_request(sys, args):
 	heapq.heappush(sys.eventlist, eventlist_tuple)
 
 	new_event_time = sys.cur_time
-	new_event = event.event("Update Driver Location", new_event_time, node_update_driver_locations, priority=1)
-	eventlist_tuple = (new_event_time, new_event)
-	heapq.heappush(sys.eventlist, eventlist_tuple)
-
-	new_event_time = sys.cur_time
-	new_event = event.event("Available Driver", new_event_time, node_available_driver, args={
-							'rider_id': rider_id, 'rider_location': rider_location}, priority=2)
+	new_event = event.event("Update Driver Location", new_event_time, node_update_driver_locations, args={'rider_id': rider_id, 'rider_location': rider_location}, priority=1)
 	eventlist_tuple = (new_event_time, new_event)
 	heapq.heappush(sys.eventlist, eventlist_tuple)
 
@@ -115,6 +109,10 @@ def node_update_driver_locations(sys, args):
 	sys.last_update = sys.cur_time
 
 	# Schedule events
+	new_event_time = sys.cur_time
+	new_event = event.event("Available Driver", new_event_time, node_available_driver, args=args, priority=2)
+	eventlist_tuple = (new_event_time, new_event)
+	heapq.heappush(sys.eventlist, eventlist_tuple)
 
 def node_available_driver(sys, args):
 	# State changes
@@ -170,16 +168,11 @@ def node_end_of_drive(sys, args):
 	sys.driver_current_locations[driver_id] = rider_location
 
 	# Schedule events
-	new_event_time = sys.cur_time
 	if len(sys.rider_queue) > 0:
 		rider_id = sys.rider_queue.pop(0)
 		rider_location = sys.rider_start_locations[rider_id]
-		new_event = event.event("Available Driver", new_event_time, node_available_driver, args={
-								'rider_id': rider_id, 'rider_location': rider_location}, priority=2)
+		new_event_time = sys.cur_time
+		new_event = event.event("Update Driver Location", new_event_time, node_update_driver_locations, args={'rider_id': rider_id, 'rider_location': rider_location}, priority=1)
 		eventlist_tuple = (new_event_time, new_event)
 		heapq.heappush(sys.eventlist, eventlist_tuple)
 
-		new_event_time = sys.cur_time
-		new_event = event.event("Update Driver Location", new_event_time, node_update_driver_locations, priority=1)
-		eventlist_tuple = (new_event_time, new_event)
-		heapq.heappush(sys.eventlist, eventlist_tuple)

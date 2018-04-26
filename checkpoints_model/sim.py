@@ -33,11 +33,9 @@ for ic_num_drivers in ic_num_drivers_list:
 		# This is the simulation loop
 		event_num = 0
 		while(event_num < num_events_per_sim):
-			"""
 			for v, ev in sys.eventlist:
 				print(ev.name, end=" ")
 			print("")
-			"""
 			event_num += 1
 			val, cur_event = heapq.heappop(sys.eventlist)
 			sys.cur_time = cur_event.time
