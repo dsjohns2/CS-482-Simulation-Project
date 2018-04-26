@@ -1,22 +1,64 @@
-import event
+from __future__ import print_function
 import system
 import event_functions
 import heapq
+import numpy as np
+import random
+import event
 
-# Schedule the initialization event.
-sys = system.system()
-initialization_event = (0, event.event(
-    "Initialize", 0, event_functions.node_init))
-sys.eventlist.append(initialization_event)
+ic_num_drivers = 100
+ic_speed = 20
 
-# This is the simulation loop.
-event_num = 0
-while(event_num < 10000):
-    event_num += 1
-    val, event = heapq.heappop(sys.eventlist)
-    sys.cur_time = event.time
-    event.execute(sys)
+num_times_run_sim = 1000
+num_events_per_sim = 10000
+wait_times = []
 
-print("wait times")
-for start, end in zip(sys.rider_start_times, sys.rider_pickup_times):
-    print(end - start)
+for i in range(0, num_times_run_sim):
+	#FIXME why does this need to be imported here?
+	import event
+
+	# Create system
+	sys = system.system(num_drivers=ic_num_drivers, speed=ic_speed)
+
+	# Set random seed
+	np.random.seed(12345 - i*2)
+	random.seed(12345 - i*2)
+
+	# Schedule the initialization event
+	initialization_event = event.event("Initialize", 0, event_functions.node_init)
+	event_tuple = (0, initialization_event)
+	sys.eventlist.append(event_tuple)
+
+	# This is the simulation loop
+	event_num = 0
+	while(event_num < num_events_per_sim):
+		event_num += 1
+		val, event = heapq.heappop(sys.eventlist)
+		sys.cur_time = event.time
+		event.execute(sys)
+
+	# Output data to analyze
+	cur_sim_wait_times = []
+	for start, end in zip(sys.rider_start_times, sys.rider_pickup_times):
+		if(end != -1):
+			cur_sim_wait_times.append(end - start)
+	wait_times.append(cur_sim_wait_times)
+
+# Write wait times to file
+smallest_sim_len = len(wait_times[0])
+for i in range(0, len(wait_times)):
+	if(len(wait_times[i]) < smallest_sim_len):
+		smallest_sim_len = len(wait_times[i])
+
+import sys
+orig_stdout = sys.stdout
+f = open('output_drivers'+str(ic_num_drivers)+'.csv', 'w')
+sys.stdout = f
+
+for i in range(0, smallest_sim_len):
+	for j in range(0, len(wait_times)):
+		print(wait_times[j][i], end=',')
+	print("")
+
+sys.stdout = orig_stdout
+f.close()

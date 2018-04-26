@@ -50,10 +50,6 @@ def inter_rnd():
 
 
 def node_init(sys, args):
-    print("This is the initialization event.")
-    print("Time: " + str(sys.cur_time))
-    print("")
-
     # State changes
     for i in range(sys.num_drivers):
         sys.driver_current_locations.append(gen_location())
@@ -68,9 +64,6 @@ def node_init(sys, args):
 
 
 def node_rider_request(sys, args):
-    print("This is the rider request event.")
-    print("Time: " + str(sys.cur_time))
-
     # State changes
     rider_id = len(sys.rider_start_locations)
     rider_location = gen_location()
@@ -93,9 +86,6 @@ def node_rider_request(sys, args):
     eventlist_tuple = (new_event_time, new_event)
     heapq.heappush(sys.eventlist, eventlist_tuple)
 
-    print("")
-
-
 def node_available_driver(sys, args):
     rider_id = args["rider_id"]
     rider_location = args["rider_location"]
@@ -111,8 +101,6 @@ def node_available_driver(sys, args):
                 min_driver_id = driver_id
                 min_distance = curr_distance
         sys.driver_is_free[min_driver_id] = False
-        print("Driver {} is taking request from rider {}"
-              .format(min_driver_id, rider_id))
 
         # Schedule events
         new_event_time = sys.cur_time + min_distance/sys.speed
@@ -128,10 +116,6 @@ def node_available_driver(sys, args):
 
 
 def node_driver_response(sys, args):
-    print("This is the driver response event.")
-    print("Time: " + str(sys.cur_time))
-    print("")
-
     # State changes
     driver_id = args['driver_id']
     rider_id = args['rider_id']
@@ -150,9 +134,6 @@ def node_driver_response(sys, args):
 
 
 def node_end_of_drive(sys, args):
-    print("This is the end of drive event.")
-    print("Time: " + str(sys.cur_time))
-
     # State changes
     driver_id = args['driver_id']
     rider_id = args['rider_id']
@@ -160,9 +141,6 @@ def node_end_of_drive(sys, args):
     sys.rider_end_times[rider_id] = sys.cur_time
     sys.driver_is_free[driver_id] = True
     sys.driver_current_locations[driver_id] = rider_location
-
-    print("Rider Spent {} minutes in the system".format(
-        sys.rider_end_times[rider_id] - sys.rider_start_times[rider_id]))
 
     # Schedule events
     new_event_time = sys.cur_time
@@ -173,4 +151,3 @@ def node_end_of_drive(sys, args):
                                 'rider_id': rider_id, 'rider_location': rider_location})
         eventlist_tuple = (new_event_time, new_event)
         heapq.heappush(sys.eventlist, eventlist_tuple)
-    print("")
