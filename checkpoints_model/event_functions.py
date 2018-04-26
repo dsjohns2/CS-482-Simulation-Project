@@ -5,7 +5,7 @@ import numpy as np
 
 # Helper Functions
 
-san_fran_distance = 60 * 60
+san_fran_distance = 3600
 
 
 def gen_location():
@@ -81,7 +81,7 @@ def node_rider_request(sys, args):
 
 def node_update_driver_locations(sys, args):
 	# State changes
-	checkpoint = (1800, 1800)
+	checkpoint = (san_fran_distance, san_fran_distance)
 	time_diff = sys.cur_time - sys.last_update
 	dist_diff = time_diff * sys.speed
 	# Update driver locations that might be moving to checkpoints
