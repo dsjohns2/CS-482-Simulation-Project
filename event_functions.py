@@ -9,8 +9,8 @@ san_fran_distance = 60 * 60
 
 
 def gen_location():
-    return (random.randint(0, san_fran_distance),
-            random.randint(0, san_fran_distance))
+    return (random.uniform(0, san_fran_distance),
+            random.uniform(0, san_fran_distance))
 
 
 def gen_end_rider(sys, start_loc):
@@ -18,9 +18,9 @@ def gen_end_rider(sys, start_loc):
     MEAN = 1663 * sys.speed
     # FIXME: don't cast dist to int (change everything else to floats instead)
     dist = max(1, int(np.random.randn() * STD + MEAN))
-    delta_x = random.randint(-dist, dist)
+    delta_x = random.uniform(-dist, dist)
     return (start_loc[0] + delta_x, start_loc[1] + (dist - delta_x) *
-            -1 if random.randint(0, 1) == 0 else 1)
+            -1 if random.uniform(0, 1) == 0 else 1)
 
 
 def distance(a, b):
@@ -85,6 +85,7 @@ def node_rider_request(sys, args):
                             'rider_id': rider_id, 'rider_location': rider_location})
     eventlist_tuple = (new_event_time, new_event)
     heapq.heappush(sys.eventlist, eventlist_tuple)
+
 
 def node_available_driver(sys, args):
     rider_id = args["rider_id"]
