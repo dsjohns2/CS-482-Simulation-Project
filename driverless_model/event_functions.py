@@ -14,8 +14,8 @@ def gen_location():
 
 
 def gen_end_rider(sys, start_loc):
-    STD = 810 * sys.speed
-    MEAN = 1663 * sys.speed
+    STD = 810 * sys.speed/1.5
+    MEAN = 1663 * sys.speed/1.5
     # FIXME: don't cast dist to int (change everything else to floats instead)
     dist = max(1, np.random.randn() * STD + MEAN)
     delta_x = random.uniform(-dist, dist)
