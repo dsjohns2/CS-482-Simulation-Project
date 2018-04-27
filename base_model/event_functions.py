@@ -17,10 +17,12 @@ def gen_end_rider(sys, start_loc):
     STD = 810 * sys.speed
     MEAN = 1663 * sys.speed
     # FIXME: don't cast dist to int (change everything else to floats instead)
-    dist = max(1, int(np.random.randn() * STD + MEAN))
+    dist = max(1, np.random.randn() * STD + MEAN)
     delta_x = random.uniform(-dist, dist)
-    return (start_loc[0] + delta_x, start_loc[1] + (dist - delta_x) *
-            -1 if random.uniform(0, 1) == 0 else 1)
+    delta_y = (abs(dist) - abs(delta_x))
+    if random.randint(0, 1) == 0:
+        delta_y *= -1
+    return (start_loc[0] + delta_x, start_loc[1] + delta_y)
 
 
 def distance(a, b):
@@ -69,6 +71,8 @@ def node_rider_request(sys, args):
     rider_location = gen_location()
     sys.rider_start_locations.append(rider_location)
     sys.rider_end_locations.append(gen_end_rider(sys, rider_location))
+    dist = distance(rider_location, sys.rider_end_locations[-1])
+    sys.info.write("{}\n".format(dist/sys.speed))
     sys.rider_start_times.append(sys.cur_time)
     sys.rider_pickup_times.append(-1)
     sys.rider_end_times.append(-1)
