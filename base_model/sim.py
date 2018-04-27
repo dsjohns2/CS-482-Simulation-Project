@@ -6,11 +6,11 @@ import numpy as np
 import random
 import event
 
-ic_num_drivers_list = [1, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+ic_num_drivers_list = [1, 25, 50, 100, 500, 1000, 2000]
 ic_speed = 20
 
-num_times_run_sim = 1000
-num_events_per_sim = 10000
+num_times_run_sim = 500
+num_events_per_sim = 5000
 
 for ic_num_drivers in ic_num_drivers_list:
 	print("Running IC Drivers = " + str(ic_num_drivers))
